@@ -1,0 +1,31 @@
+# Experiment 2 - Tiny CNN.
+# now bring in convolutions (locality + weight sharing) with the smallest cnn i could make.
+# should clearly beat the mlp - that's the whole point, convolutions matter for images.
+experiment_name: "02_tiny_cnn"
+group: "tiny_cnn"
+tags: ["cnn", "small"]
+notes: "2 conv blocks (32->64) + 1 FC. First real convolutional model."
+seed: 42
+
+model:
+  name: tiny_cnn
+  params:
+    dropout: 0.25
+
+data:
+  augment: false
+  img_size: 48
+  val_split: 0.1
+  batch_size: 128
+  num_workers: 2
+
+train:
+  epochs: 40
+  optimizer: adam
+  lr: 0.001
+  weight_decay: 0.0
+  scheduler: cosine
+  label_smoothing: 0.0
+  class_weights: false
+  amp: true
+  early_stop_patience: null

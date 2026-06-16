@@ -1,0 +1,32 @@
+# Experiment 1 - MLP baseline.
+# point of this one is just to get a floor to compare against. an mlp flattens the image
+# so it throws away all the spatial info -> i expect it to underfit next to any cnn.
+experiment_name: "01_mlp"
+group: "mlp"
+tags: ["baseline", "mlp", "underfit-demo"]
+notes: "Flatten + 2 hidden layers. No spatial prior -> expected to underfit."
+seed: 42
+
+model:
+  name: mlp
+  params:
+    hidden: [512, 256]
+    dropout: 0.2
+
+data:
+  augment: false      # aug doesn't really help a weak mlp, keeping the baseline simple
+  img_size: 48
+  val_split: 0.1
+  batch_size: 128
+  num_workers: 2
+
+train:
+  epochs: 40
+  optimizer: adam
+  lr: 0.001
+  weight_decay: 0.0
+  scheduler: cosine
+  label_smoothing: 0.0
+  class_weights: false
+  amp: true
+  early_stop_patience: null

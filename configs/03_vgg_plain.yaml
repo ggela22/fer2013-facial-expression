@@ -1,0 +1,35 @@
+# Experiment 3 - Deep VGG-style CNN, on purpose with NO regularization.
+# this is my overfitting demo. bigger model (3 blocks, 64->128->256) but batchnorm,
+# dropout, augmentation and weight decay are all off. expect train acc to climb toward
+# ~100% while val acc stalls or drops -> a big train/val gap (logged as gap/acc).
+experiment_name: "03_vgg_plain"
+group: "vgg"
+tags: ["cnn", "deep", "overfit-demo", "no-regularization"]
+notes: "Deep CNN with NO regularization -> should overfit. Baseline for experiment 4."
+seed: 42
+
+model:
+  name: vgg
+  params:
+    channels: [64, 128, 256]
+    bn: false
+    dropout: 0.0
+    convs_per_block: 2
+
+data:
+  augment: false
+  img_size: 48
+  val_split: 0.1
+  batch_size: 128
+  num_workers: 2
+
+train:
+  epochs: 50
+  optimizer: adam
+  lr: 0.001
+  weight_decay: 0.0
+  scheduler: none
+  label_smoothing: 0.0
+  class_weights: false
+  amp: true
+  early_stop_patience: null

@@ -1,0 +1,36 @@
+# Experiment 4 - same deep VGG, but actually regularized this time.
+# the fix for experiment 3. exact same capacity, i just add batchnorm (faster + more
+# stable), dropout, augmentation, weight decay, label smoothing and a cosine lr.
+# the train/val gap should shrink and val acc should go up. my best from-scratch cnn.
+experiment_name: "04_vgg_reg"
+group: "vgg"
+tags: ["cnn", "deep", "regularized", "best-cnn"]
+notes: "Same VGG as exp 3 + BN + dropout + augmentation + weight decay + label smoothing."
+seed: 42
+
+model:
+  name: vgg
+  params:
+    channels: [64, 128, 256]
+    bn: true
+    dropout: 0.4
+    convs_per_block: 2
+
+data:
+  augment: true
+  img_size: 48
+  val_split: 0.1
+  batch_size: 128
+  num_workers: 2
+
+train:
+  epochs: 80
+  optimizer: adam
+  lr: 0.001
+  weight_decay: 0.0001
+  scheduler: cosine
+  label_smoothing: 0.1
+  class_weights: false
+  grad_clip: 5.0
+  amp: true
+  early_stop_patience: 15

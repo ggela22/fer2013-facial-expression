@@ -1,0 +1,14 @@
+# Core
+torch>=2.0
+torchvision>=0.15
+numpy
+pandas
+scikit-learn
+pyyaml
+tqdm
+
+# Experiment tracking
+wandb>=0.16
+
+# Plotting (optional, used for local analysis)
+matplotlib

@@ -1,0 +1,34 @@
+# Experiment 6 - Transfer learning with torchvision's ResNet18.
+# seeing if imagenet-pretrained features carry over to tiny 48x48 grayscale faces. i turn
+# the 3-channel stem into 1 channel by averaging the rgb filters, and upsample the images
+# to 64x64 so the deep downsampling stack has enough spatial size to work with.
+experiment_name: "06_resnet18_transfer"
+group: "resnet18"
+tags: ["transfer-learning", "resnet18", "pretrained"]
+notes: "ImageNet ResNet18 adapted to 1-channel input, fine-tuned end-to-end at 64x64."
+seed: 42
+
+model:
+  name: resnet18
+  params:
+    pretrained: true
+    freeze_backbone: false
+
+data:
+  augment: true
+  img_size: 64          # bump 48 -> 64 so the deep downsampling has room to work
+  val_split: 0.1
+  batch_size: 128
+  num_workers: 2
+
+train:
+  epochs: 40
+  optimizer: adamw
+  lr: 0.0003            # smaller lr since we're fine-tuning pretrained weights, not starting fresh
+  weight_decay: 0.0005
+  scheduler: cosine
+  label_smoothing: 0.1
+  class_weights: false
+  grad_clip: 5.0
+  amp: true
+  early_stop_patience: 10

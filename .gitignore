@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# Data (downloaded from Kaggle, do NOT commit)
+data/
+*.csv
+!configs/*.csv
+
+# Model checkpoints / outputs
+checkpoints/
+outputs/
+*.pth
+*.pt
+
+# Experiment tracking
+wandb/
+
+# Secrets
+kaggle.json
+.env
+
+# OS
+.DS_Store
+Thumbs.db

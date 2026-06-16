@@ -1,0 +1,45 @@
+# wandb sweep over the regularized VGG (experiment 4) - bayesian search, trying to
+# maximize the best validation accuracy.
+#
+# Launch from the repo root:
+#     wandb sweep configs/sweep_vgg.yaml
+#     wandb agent <entity>/<project>/<sweep_id>        # run one or more agents
+#
+# Each trial becomes its own run, grouped with the other VGG runs in Wandb.
+program: src/train.py
+method: bayes
+metric:
+  name: best_val_acc
+  goal: maximize
+
+parameters:
+  lr:
+    distribution: log_uniform_values
+    min: 0.0001
+    max: 0.01
+  dropout:
+    values: [0.2, 0.3, 0.4, 0.5]
+  weight_decay:
+    values: [0.0, 0.0001, 0.0005]
+  optimizer:
+    values: [adam, adamw, sgd]
+  batch_size:
+    values: [64, 128, 256]
+
+# kill off obviously-losing trials early so we don't waste gpu time on them.
+early_terminate:
+  type: hyperband
+  min_iter: 10
+
+command:
+  - ${env}
+  - python
+  - -m
+  - src.train
+  - --config
+  - configs/04_vgg_reg.yaml
+  - --epochs
+  - "40"
+  - --tag
+  - sweep
+  - ${args}

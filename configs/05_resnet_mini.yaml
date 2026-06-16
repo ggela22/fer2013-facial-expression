@@ -1,0 +1,35 @@
+# Experiment 5 - Mini ResNet (from scratch).
+# checking whether skip connections actually help at this depth. they let gradients flow
+# more easily so you can go deeper without it degrading. comparing against the regularized
+# vgg (exp 4) at roughly the same param count.
+experiment_name: "05_resnet_mini"
+group: "resnet_mini"
+tags: ["cnn", "resnet", "residual", "from-scratch"]
+notes: "Small ResNet (3 stages, 2 BasicBlocks each) with augmentation + cosine schedule."
+seed: 42
+
+model:
+  name: resnet_mini
+  params:
+    channels: [64, 128, 256]
+    blocks_per_stage: 2
+    dropout: 0.3
+
+data:
+  augment: true
+  img_size: 48
+  val_split: 0.1
+  batch_size: 128
+  num_workers: 2
+
+train:
+  epochs: 80
+  optimizer: adamw
+  lr: 0.001
+  weight_decay: 0.0005
+  scheduler: cosine
+  label_smoothing: 0.1
+  class_weights: false
+  grad_clip: 5.0
+  amp: true
+  early_stop_patience: 15
